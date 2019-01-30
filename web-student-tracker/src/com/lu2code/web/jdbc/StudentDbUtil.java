@@ -139,7 +139,7 @@ public class StudentDbUtil {
 				String email = myRs.getString("email");
 				
 				//use information to construct a new student object
-				theStudent = new Student(firstName, lastName, email);
+				theStudent = new Student(studentId, firstName, lastName, email);
 			} else {
 				throw new Exception("Could not find student id: " + studentId);
 			}
@@ -180,6 +180,35 @@ public class StudentDbUtil {
 			//clean JDBC object
 			close(myConn, myStmt, null);
 		}
+	}
+
+	public void deleteStudent(String theStudentId) throws Exception{
+		
+		Connection myConn = null;
+		PreparedStatement myStmt = null;
+		try {
+			//convert student id to int
+			int studentId = Integer.parseInt(theStudentId);
+			
+			//get connection to database
+			myConn = dataSource.getConnection();
+			
+			//create sql to delete student
+			String sql = "delete from student where id=?";
+			
+			//prepare statement
+			myStmt = myConn.prepareStatement(sql);
+			
+			//set params
+			myStmt.setInt(1, studentId);
+			
+			//execute the statement
+			myStmt.execute();
+		} finally {
+			//clean JDBC object
+			close(myConn, myStmt, null);
+		}
+		
 	}
 	
 
